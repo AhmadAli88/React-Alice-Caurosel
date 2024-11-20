@@ -1,10 +1,11 @@
-/*eslint-disable*/
-import { useState } from 'react';
+/* eslint-disable */
+import React, { useState, useRef } from 'react';
 import AliceCarousel from 'react-alice-carousel';
 import 'react-alice-carousel/lib/alice-carousel.css';
 
 function ControlledCarousel() {
     const [currentIndex, setCurrentIndex] = useState(0);
+    const carouselRef = useRef(null); // Reference to the AliceCarousel instance
 
     const items = [
         <img src="https://via.placeholder.com/300x200" alt="Slide 1" />,
@@ -16,20 +17,29 @@ function ControlledCarousel() {
         setCurrentIndex(e.item);
     };
 
+    const handlePrevClick = () => {
+        if (carouselRef.current) {
+            carouselRef.current.slidePrev();
+        }
+    };
+
+    const handleNextClick = () => {
+        if (carouselRef.current) {
+            carouselRef.current.slideNext();
+        }
+    };
+
     return (
         <div>
-            <AliceCarousel 
+            <AliceCarousel
+                ref={carouselRef}
                 items={items}
                 activeIndex={currentIndex}
                 onSlideChanged={handleSlideChange}
                 infinite
             />
-            <button onClick={() => setCurrentIndex((currentIndex - 1 + items.length) % items.length)}>
-                Previous
-            </button>
-            <button onClick={() => setCurrentIndex((currentIndex + 1) % items.length)}>
-                Next
-            </button>
+            <button onClick={handlePrevClick}>Previous</button>
+            <button onClick={handleNextClick}>Next</button>
         </div>
     );
 }
